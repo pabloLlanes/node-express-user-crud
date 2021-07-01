@@ -1,7 +1,7 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
+const { configEnv } = require("../utils/config");
 
-const connectionMongoDb = async () => {
+const connMongoDb = async () => {
   const connectionOptions = {
     useNewUrlParser: true,
     useFindAndModify: false,
@@ -10,7 +10,7 @@ const connectionMongoDb = async () => {
   };
 
   try {
-    await mongoose.connect(process.env.MONGODBLOCAL, connectionOptions);
+    await mongoose.connect(configEnv.mongoLocal, connectionOptions);
     console.log("db connected ok");
   } catch (e) {
     console.error(e);
@@ -18,4 +18,4 @@ const connectionMongoDb = async () => {
   }
 };
 
-module.exports = { connectionMongoDb };
+module.exports = { connMongoDb };

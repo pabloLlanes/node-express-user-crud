@@ -1,22 +1,22 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
-const { connectionMongoDb } = require("./db");
+const { connMongoDb } = require("./db");
+const { configEnv } = require("../utils/config");
 
 class Server {
   //constructor
   constructor() {
     this.app = express();
-    this.port = process.env.PORT;
+
+    this.port = configEnv.srvPort;
 
     this.usersPath = "/api/users";
-    this.authPath = "/api/auth";
 
     //db connection
     this.dbConnection();
     //middlewares
     this.middlewares();
-
     //routes
     this.routes();
   }
@@ -37,8 +37,7 @@ class Server {
 
   //routes
   routes() {
-    this.app.use(this.usersPath, require("../routes/users"));
-    this.app.use(this.authPath, require("../routes/auth"));
+    this.app.use(this.usersPath, require("../api/users/users.routes"));
     //The 404 Route (ALWAYS Keep this as the last route)
     this.app.get("*", (_, res) => {
       res.status(404).json({ msg: "error: route not encountered" });
@@ -47,7 +46,7 @@ class Server {
 
   //db mongo
   async dbConnection() {
-    await connectionMongoDb();
+    await connMongoDb();
   }
 
   //initial server
